@@ -1,0 +1,10 @@
+name: collatz-conjecture-odd-graph
+version: 0.1.0.0
+dependencies:
+  - base >= 4.7 && < 5
+  - gloss
+
+executables:
+  collatz-graph:
+    main: Main.hs
+    source-dirs: src
