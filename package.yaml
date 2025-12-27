@@ -4,7 +4,21 @@ dependencies:
   - base >= 4.7 && < 5
   - gloss
 
+library:
+  source-dirs: src
+  exposed-modules:
+    - DirectedGraph
+    - GraphDraw
+    - CollatzGraph
+
 executables:
   collatz-graph:
     main: Main.hs
     source-dirs: src
+
+tests:
+  graph-test:
+    main: CollatzGraphTest.hs
+    source-dirs: test
+    dependencies:
+      - collatz-conjecture-odd-graph

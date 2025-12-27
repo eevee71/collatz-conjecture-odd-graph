@@ -8,10 +8,24 @@ name:           collatz-conjecture-odd-graph
 version:        0.1.0.0
 build-type:     Simple
 
+library
+  exposed-modules:
+      DirectedGraph
+      GraphDraw
+      CollatzGraph
+  other-modules:
+      Main
+      Paths_collatz_conjecture_odd_graph
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , gloss
+  default-language: Haskell2010
+
 executable collatz-graph
   main-is: Main.hs
   other-modules:
-      Collatz
       CollatzGraph
       DirectedGraph
       GraphDraw
@@ -20,5 +34,18 @@ executable collatz-graph
       src
   build-depends:
       base >=4.7 && <5
+    , gloss
+  default-language: Haskell2010
+
+test-suite graph-test
+  type: exitcode-stdio-1.0
+  main-is: CollatzGraphTest.hs
+  other-modules:
+      Paths_collatz_conjecture_odd_graph
+  hs-source-dirs:
+      test
+  build-depends:
+      base >=4.7 && <5
+    , collatz-conjecture-odd-graph
     , gloss
   default-language: Haskell2010

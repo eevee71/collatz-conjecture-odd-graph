@@ -1,33 +1,38 @@
 module DirectedGraph where
 
 {-
-    A simple directed graph represented 
-    as an adjacency list [(Integer, [Integer])] with basic operations
+    A simple directed graph with basic operations represented as an adjacency list [(Integer, Maybe Integer)], 
+    in which each node has at most one outgoing edge, as induced by the Collatz function.
 -}
 
 
-newtype DirectedGraph = DG [(Integer, [Integer])]
+newtype DirectedGraph = DG [(Integer, Maybe Integer)] deriving Show
 
 
-addNode :: Integer -> DirectedGraph -> DirectedGraph
-addNode n (DG al) = DG ((n, []) : al)
-
-
-addEdge :: Integer -> Integer -> DirectedGraph -> DirectedGraph
-addEdge n v (DG al) = DG [(x, if x == n then v : l else l) | (x, l) <- al]
-
-
-neighbors :: Integer -> DirectedGraph -> [Integer]
-neighbors n (DG al) | null l = []
-                    | otherwise = snd(head l)
+child :: Integer -> DirectedGraph -> Maybe Integer
+child n (DG al) | null l = Nothing
+                | otherwise = snd (head l)
                     where 
                         l = filter (\x -> fst x == n) al
 
 
 hasNode :: Integer -> DirectedGraph -> Bool
-hasNode n (DG al) = n `elem` map fst al
+hasNode n g = n `elem` nodes g
 
 
 emptyDirectedGraph :: DirectedGraph
 emptyDirectedGraph = DG []
+
+nodes :: DirectedGraph -> [Integer]
+nodes (DG al) = map fst al
+
+
+roots :: DirectedGraph -> [Integer]
+roots (DG al) = filter (`notElem` [v | (_, Just v) <- al]) (nodes (DG al))
+
+
+nodeLevels :: DirectedGraph -> [(Integer, Integer)]
+nodeLevels (DG al) = map (\(n, _) -> (n, lvl n)) al
+                    where 
+                        lvl n = maybe 0 ((1 +) . lvl) (child n (DG al))
 
