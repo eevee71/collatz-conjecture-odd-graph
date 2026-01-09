@@ -23,13 +23,13 @@ collatzNextOdd n | even n = if odd afterDiv then Just afterDiv else collatzNextO
 
 build :: [Integer] -> [(Integer, Maybe Integer)] -> [(Integer, Maybe Integer)]
 build [] al = al
-build (x:xs) al | x `elem` map fst al = build xs al
+build (x:xs) al | x `elem` nodes graph = build xs al
                 | otherwise = nextOdd (collatzNextOdd x)
                 where nextOdd Nothing = build xs ((x, Nothing) : al)
                       nextOdd (Just next) = let newAl = ((x, Just next) : al)
-                                              in if next `elem` map fst al 
+                                              in if next `elem` nodes graph
                                                     then build xs newAl
                                                  else 
                                                     build (next : xs) newAl
+                      graph = DG al
 
- 
