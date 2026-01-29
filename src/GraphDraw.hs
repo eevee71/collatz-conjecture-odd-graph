@@ -29,20 +29,20 @@ positionOf n ps | null l = (0, 0)
 
 
 computeEdges :: DirectedGraph -> [NodePosition] -> [((Float, Float), (Float, Float))]
-computeEdges (DG al) pos =[ (positionOf n pos, positionOf v pos) | (n, Just v) <- al, hasNode v (DG al)]
+computeEdges (DG al) pos = [(positionOf n pos, positionOf v pos) | (n, Just v) <- al]
 
 
 nodePositions :: DirectedGraph -> [NodePosition]
-nodePositions (DG al) = [(n, (fromIntegral lvl * 160.0, getY n lvl)) | (n, lvl) <- levels]
+nodePositions (DG al) = [(n, (fromIntegral lvl * 160, getY n lvl)) | (n, lvl) <- levels]
   where
     levels = nodeLevels (DG al)
-    getY n lvl = (idx - (fromIntegral (length nodesOnSameLevel) - 1) / 2) * 80.0
+    getY n lvl = (idx - (fromIntegral (length nodesOnSameLevel) - 1) / 2) * 80
         where 
-            nodesOnSameLevel = [ v | (v, l) <- levels, l == lvl]
-            idx = head [ i | (v, i) <- zip nodesOnSameLevel [0..], v == n ]
+            nodesOnSameLevel = [v | (v, l) <- levels, l == lvl]
+            idx = head [i | (v, i) <- zip nodesOnSameLevel [0..], v == n]
  
    
-drawNode :: (Integer, (Float, Float)) -> Picture
+drawNode :: NodePosition -> Picture
 drawNode (n, (x,y)) = Translate x y $ Pictures
     [ Color lightBlue (circleSolid 30),
      Color black (circle 30),
@@ -50,6 +50,20 @@ drawNode (n, (x,y)) = Translate x y $ Pictures
     ]
 
 
+arrow :: (Float, Float) -> (Float, Float) -> Picture
+arrow (x1, y1) (x2, y2) =
+    let r = 35
+        size = 12
+        dx = x2 - x1
+        dy = y2 - y1
+        angle = atan2 dy dx * 180 / pi
+        d = sqrt (dx*dx + dy*dy)
+        x = x2 - (dx / d) * r  
+        y = y2 - (dy / d) * r
+        tri = Polygon [(size/2,0), (-size/2, size/2), (-size/2, -size/2)]
+    in Translate x y $ Rotate (-angle) $ Color black tri
+
+
 drawEdge :: ((Float, Float), (Float, Float)) -> Picture
-drawEdge ((x1,y1), (x2,y2)) = Color black $ Line [(x1,y1), (x2,y2)]
+drawEdge ((x1,y1), (x2,y2)) = Pictures [Color black $ Line [(x1,y1), (x2,y2)], arrow (x1,y1) (x2,y2)]
 

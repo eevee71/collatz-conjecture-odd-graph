@@ -23,6 +23,7 @@ hasNode n g = n `elem` nodes g
 emptyDirectedGraph :: DirectedGraph
 emptyDirectedGraph = DG []
 
+
 nodes :: DirectedGraph -> [Integer]
 nodes (DG al) = map fst al
 

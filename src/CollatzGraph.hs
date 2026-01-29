@@ -14,11 +14,11 @@ collatzGraph n = DG (build (filter odd [1..n]) [])
 
 collatzNextOdd :: Integer -> Maybe Integer
 collatzNextOdd 1 = Nothing
-collatzNextOdd n | even n = if odd afterDiv then Just afterDiv else collatzNextOdd afterDiv
+collatzNextOdd n | even n = if odd afterEven then Just afterEven else collatzNextOdd afterEven
                  | otherwise = if odd afterOdd then Just afterOdd else collatzNextOdd afterOdd
                      where 
                         afterOdd = 3 * n + 1   
-                        afterDiv = div n 2
+                        afterEven = div n 2
 
 
 build :: [Integer] -> [(Integer, Maybe Integer)] -> [(Integer, Maybe Integer)]
