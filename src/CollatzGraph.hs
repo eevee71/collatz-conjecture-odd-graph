@@ -15,7 +15,7 @@ collatzGraph n = DG (build (filter odd [1..n]) [])
 collatzNextOdd :: Integer -> Maybe Integer
 collatzNextOdd 1 = Nothing
 collatzNextOdd n | even n = if odd afterEven then Just afterEven else collatzNextOdd afterEven
-                 | otherwise = if odd afterOdd then Just afterOdd else collatzNextOdd afterOdd
+                 | otherwise = collatzNextOdd afterOdd
                      where 
                         afterOdd = 3 * n + 1   
                         afterEven = div n 2
@@ -27,7 +27,7 @@ build (x:xs) al | x `elem` nodes graph = build xs al
                 | otherwise = nextOdd (collatzNextOdd x)
                 where nextOdd Nothing = build xs ((x, Nothing) : al)
                       nextOdd (Just next) = let newAl = ((x, Just next) : al)
-                                              in if next `elem` nodes graph
+                                              in if next `elem` nodes graph || next `elem` xs
                                                     then build xs newAl
                                                  else 
                                                     build (next : xs) newAl
